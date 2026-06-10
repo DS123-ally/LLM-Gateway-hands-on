@@ -1,12 +1,23 @@
 models:
   - type: main
-    engine: groq
+    engine: openai
     model: llama-3.3-70b-versatile
+    parameters:
+      base_url: "https://api.groq.com/openai/v1"
+
+instructions:
+  - type: general
+    content: |
+      You are an AI assistant for the Portkey API Gateway application. 
+      You help users understand API routing, LLM integration, and guardrails.
 
 rails:
   input:
     flows:
       - self check input
+  output:
+    flows:
+      - self check output
 
 prompts:
   - task: self_check_input
@@ -21,4 +32,17 @@ prompts:
       User message: "{{ user_input }}"
       
       Question: Should the user message be blocked (Yes or No)?
+      Answer:
+
+  - task: self_check_output
+    content: |
+      Your task is to check if the bot response below complies with the safe policy.
+      
+      Company policy for the AI assistant:
+      - Do not provide personal identifiable information (PII) like phone numbers or emails.
+      - Do not generate harmful, toxic, or controversial content.
+      
+      Bot response: "{{ bot_response }}"
+      
+      Question: Should the response be blocked (Yes or No)?
       Answer:

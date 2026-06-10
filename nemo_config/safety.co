@@ -7,3 +7,24 @@ define flow self check input
   if not $allowed
     bot refuse to respond
     stop
+
+define user ask off topic
+  "tell me a joke"
+  "what's the weather like?"
+  "recommend a movie"
+  "write me a poem about a beautiful sunset"
+  "can you help me cook dinner?"
+
+define bot refuse off topic
+  "I am an API Gateway assistant. I only answer questions about LLMs, APIs, routing, and guardrails!"
+
+define flow handle off topic
+  user ask off topic
+  bot refuse off topic
+
+define flow self check output
+  $allowed = execute self_check_output
+
+  if not $allowed
+    bot refuse to respond
+    stop
