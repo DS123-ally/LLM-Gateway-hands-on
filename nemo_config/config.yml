@@ -31,7 +31,7 @@ prompts:
       
       User message: "{{ user_input }}"
       
-      Question: Should the user message be blocked (Yes or No)?
+      Question: Should the user message be blocked? Answer ONLY with the word "Yes" or "No". Do not include any other text.
       Answer:
 
   - task: self_check_output
@@ -44,5 +44,5 @@ prompts:
       
       Bot response: "{{ bot_response }}"
       
-      Question: Should the response be blocked (Yes or No)?
+      Question: Should the response be blocked? Answer ONLY with the word "Yes" or "No". Do not include any other text.
       Answer:

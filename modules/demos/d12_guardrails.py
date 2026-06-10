@@ -21,40 +21,32 @@ def render():
     st.subheader("Configure Guardrails")
     st.write("Enable the specific guardrail checks you want to run before the request is sent to the LLM.")
 
+    st.info("💡 **How to use this demo**: Portkey Cloud Guardrails require you to create specific rules in your Portkey Dashboard. Create a Guardrail in Portkey (e.g. PII Detection), copy its ID, and paste it below!")
+
     col1, col2 = st.columns(2)
     with col1:
         st.write("**Input Guardrails (Pre-LLM)**")
-        check_pii = st.checkbox("PII Detection", value=True, help="Blocks prompts containing phone numbers, emails, or credit card numbers.")
-        check_toxicity = st.checkbox("Toxicity Detection", value=True, help="Blocks offensive, hateful, or toxic language in the prompt.")
-        check_jailbreak = st.checkbox("Prompt Injection / Jailbreak", value=True, help="Blocks attempts to override system instructions or bypass safety filters.")
-        check_sensitive = st.checkbox("Sensitive Topic Block", value=True, help="Multi-rail stacking: Blocks specific banned topics or competitor names.")
+        input_ids = st.text_input("Input Guardrail IDs", placeholder="e.g. guardrail-1234, guardrail-5678", help="Comma-separated list of Guardrail IDs to check the user's prompt.")
     with col2:
         st.write("**Output Guardrails (Post-LLM)**")
-        check_out_toxicity = st.checkbox("Response Sanitizer (Toxicity)", value=True, help="Intercepts the LLM's response. If the LLM generates toxic text, it is blocked before returning to the user.")
+        output_ids = st.text_input("Output Guardrail IDs", placeholder="e.g. guardrail-9012", help="Comma-separated list of Guardrail IDs to check the LLM's generated response.")
 
-    # Build the guardrails array based on selection
-    request_guardrails = []
-    if check_pii: request_guardrails.append({"id": "pii"})
-    if check_toxicity: request_guardrails.append({"id": "toxicity"})
-    if check_jailbreak: request_guardrails.append({"id": "prompt_injection"})
-    if check_sensitive: request_guardrails.append({"id": "gibberish"}) # Using gibberish check to simulate sensitive topic block for demo
+    input_list = [x.strip() for x in input_ids.split(",")] if input_ids.strip() else []
+    output_list = [x.strip() for x in output_ids.split(",")] if output_ids.strip() else []
 
-    response_guardrails = []
-    if check_out_toxicity: response_guardrails.append({"id": "toxicity"})
-
-    if not request_guardrails and not response_guardrails:
-        st.warning("Please enable at least one guardrail check to run this demo.")
+    if not input_list and not output_list:
+        st.warning("Please enter at least one Guardrail ID to run this demo. (Or test the NeMo Guardrails page for local checks!)")
         st.stop()
-
-    guardrails_config = {}
-    if request_guardrails: guardrails_config["request"] = request_guardrails
-    if response_guardrails: guardrails_config["response"] = response_guardrails
 
     portkey_config = {
         "virtual_key": vk,
-        "override_params": {"model": PRIMARY_MODEL},
-        "guardrails": [guardrails_config]
+        "override_params": {"model": PRIMARY_MODEL}
     }
+    
+    if input_list:
+        portkey_config["input_guardrails"] = input_list
+    if output_list:
+        portkey_config["output_guardrails"] = output_list
 
     with st.expander("Portkey Config"):
         st.json(portkey_config)
