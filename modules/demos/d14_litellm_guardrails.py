@@ -18,9 +18,9 @@ def render():
     st.subheader("1. Start the LiteLLM Proxy Server")
     st.info(
         "To run this demo, you must start the LiteLLM Proxy Server in a separate terminal window. "
-        "The proxy is configured via `litellm_guardrails_config.yaml`."
+        "Because Windows PowerShell defaults to an older encoding, you must set UTF-8 before running the proxy."
     )
-    st.code("uv run litellm --config litellm_guardrails_config.yaml --port 4000", language="bash")
+    st.code('$env:PYTHONIOENCODING="utf-8"\nuv run litellm --config litellm_guardrails_config.yaml --port 4000', language="powershell")
 
     st.subheader("2. Test the Proxy Guardrails")
     st.write("Send a request through the local LiteLLM Proxy. If a guardrail intercepts it, the proxy will return a `400 Bad Request`.")

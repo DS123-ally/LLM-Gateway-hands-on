@@ -4,16 +4,13 @@ model_list:
       model: "groq/llama-3.3-70b-versatile"
       api_key: "os.environ/GROQ_API_KEY"
 
-litellm_settings:
-  guardrails:
-    - prompt_injection:  # Uses Llama Guard via HuggingFace by default if no API base is provided, but we will configure it to use Groq's Llama Guard!
-        # Wait, the best way to do Llama Guard in litellm proxy:
-        # litellm handles "llama_guard" natively using the proxy API
-        guardrail_name: "llama-guard-check"
-        litellm_params:
-          guardrail: "llama_guard"
-          mode: "pre_call"
-          # Groq hosts llama-guard-3-8b, so we can point it there!
-          api_base: "https://api.groq.com/openai/v1"
-          api_key: "os.environ/GROQ_API_KEY"
-          model: "llama-guard-3-8b"
+# In LiteLLM v1.88, guardrails are defined at the root as a list
+guardrails:
+  - guardrail_name: "llama_guard"
+    litellm_params:
+      guardrail: "llama_guard"
+      mode: "pre_call"
+      # Groq hosts llama-guard-3-8b, so we can point it there!
+      api_base: "https://api.groq.com/openai/v1"
+      api_key: "os.environ/GROQ_API_KEY"
+      model: "llama-guard-3-8b"
