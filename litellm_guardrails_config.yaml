@@ -5,4 +5,4 @@ model_list:
       api_key: "os.environ/GROQ_API_KEY"
 
 litellm_settings:
-  callbacks: ["my_custom_guardrail.py"]
+  callbacks: ["my_custom_guardrail.proxy_handler_instance"]
