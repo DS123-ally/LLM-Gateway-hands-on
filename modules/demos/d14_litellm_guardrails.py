@@ -38,8 +38,8 @@ def render():
                 payload = {
                     "model": "groq-model",
                     "messages": [{"role": "user", "content": prompt}],
-                    # Request Llama Guard to be run!
-                    "guardrails": ["llama_guard"]
+                    # Request the Prompt Injection guardrail to be run!
+                    "guardrails": ["my_injection_check"]
                 }
                 
                 # Check if proxy is running
@@ -57,7 +57,7 @@ def render():
                     st.success("✅ **Request Passed!**")
                     st.write("**Response:**")
                     st.info(data['choices'][0]['message']['content'])
-                    st.caption("This request bypassed Llama Guard and was successfully routed to Groq!")
+                    st.caption("This request bypassed the Custom Guardrail and was successfully routed to Groq!")
             except Exception as e:
                 st.error(f"Error: {e}")
 

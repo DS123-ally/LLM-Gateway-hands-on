@@ -6,11 +6,5 @@ model_list:
 
 # In LiteLLM v1.88, guardrails are defined at the root as a list
 guardrails:
-  - guardrail_name: "llama_guard"
-    litellm_params:
-      guardrail: "llama_guard"
-      mode: "pre_call"
-      # Groq hosts llama-guard-3-8b, so we can point it there!
-      api_base: "https://api.groq.com/openai/v1"
-      api_key: "os.environ/GROQ_API_KEY"
-      model: "llama-guard-3-8b"
+  - guardrail_name: "my_injection_check"
+    callbacks: ["my_custom_guardrail.py"]
