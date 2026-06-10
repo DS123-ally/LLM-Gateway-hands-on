@@ -9,8 +9,9 @@ try:
     from langchain_groq import ChatGroq
     from nemoguardrails.llm.providers import register_llm_provider
     NEMO_INSTALLED = True
-except ImportError:
+except Exception as e:
     NEMO_INSTALLED = False
+    NEMO_ERROR = str(e)
 
 from modules.utils import require_keys, get_primary_model
 
@@ -36,11 +37,10 @@ def render():
     st.divider()
 
     if not NEMO_INSTALLED:
-        st.error("🚨 **NeMo Guardrails is not installed!**")
+        st.error(f"🚨 **NeMo Guardrails failed to initialize!**")
         st.write(
-            "The `nemoguardrails` package failed to install on your machine because of a known Windows C++ "
-            "Build Tools error related to parsing the `NVIDIA` path in your environment variables. "
-            "To run this demo fully, `nemoguardrails` must be installed successfully."
+            f"The `nemoguardrails` package failed to run on your machine because of a known incompatibility. "
+            f"**Error Details:** `{NEMO_ERROR}`"
         )
         with st.expander("See the code that would run"):
             st.code('''from nemoguardrails import LLMRails, RailsConfig
