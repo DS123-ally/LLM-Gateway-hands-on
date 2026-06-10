@@ -131,6 +131,7 @@ with st.sidebar:
         ("Response Caching", "caching"),
         ("Rate Limiting", "rate_limiting"),
         ("Streaming", "streaming"),
+        ("Guardrails", "guardrails"),
         ("Production Config", "production"),
     ]
     _LABELS = [p[0] for p in _PAGES]
@@ -160,6 +161,7 @@ from modules.demos import (
     d09_rate_limiting,
     d10_streaming,
     d11_production,
+    d12_guardrails,
 )
 
 _PAGE_MAP = {
@@ -175,6 +177,7 @@ _PAGE_MAP = {
     "caching":         d08_caching.render,
     "rate_limiting":   d09_rate_limiting.render,
     "streaming":       d10_streaming.render,
+    "guardrails":      d12_guardrails.render,
     "production":      d11_production.render,
 }
 
