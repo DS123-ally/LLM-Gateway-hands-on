@@ -38,7 +38,7 @@ def render():
     col1, col2 = st.columns(2)
     with col1:
         timeout_ms = st.slider(
-            "Timeout per attempt (ms)", 500, 8000, 2000, 250,
+            "Timeout per attempt (ms)", 50, 8000, 2000, 50,
             help=(
                 "How long to wait before declaring a timeout. "
                 "The large 70B model usually needs 3–8s, so 2s will reliably time it out. "
