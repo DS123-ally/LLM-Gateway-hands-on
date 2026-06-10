@@ -3,8 +3,6 @@ import time
 import os
 
 try:
-    import nest_asyncio
-    nest_asyncio.apply()
     from nemoguardrails import LLMRails, RailsConfig
     from langchain_groq import ChatGroq
     from nemoguardrails.llm.providers import register_llm_provider
