@@ -131,7 +131,8 @@ with st.sidebar:
         ("Response Caching", "caching"),
         ("Rate Limiting", "rate_limiting"),
         ("Streaming", "streaming"),
-        ("Guardrails", "guardrails"),
+        ("Guardrails (Portkey)", "guardrails"),
+        ("NeMo Guardrails (Local)", "nemo"),
         ("Production Config", "production"),
     ]
     _LABELS = [p[0] for p in _PAGES]
@@ -162,6 +163,7 @@ from modules.demos import (
     d10_streaming,
     d11_production,
     d12_guardrails,
+    d13_nemo,
 )
 
 _PAGE_MAP = {
@@ -178,6 +180,7 @@ _PAGE_MAP = {
     "rate_limiting":   d09_rate_limiting.render,
     "streaming":       d10_streaming.render,
     "guardrails":      d12_guardrails.render,
+    "nemo":            d13_nemo.render,
     "production":      d11_production.render,
 }
 
