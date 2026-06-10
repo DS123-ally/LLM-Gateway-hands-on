@@ -17,8 +17,11 @@ st.sidebar.header("⚙️ Configuration")
 
 portkey_api_key = st.sidebar.text_input("Portkey API Key", type="password", help="Get this from Portkey Dashboard")
 groq_api_key = st.sidebar.text_input("Groq API Key (For Baseline)", type="password", help="Required only for Baseline experiment")
-vk_primary = st.sidebar.text_input("Primary Virtual Key Slug", value="vk1", help="Virtual key configured in Portkey for Groq (e.g. llama-3.3-70b-versatile)")
-vk_fallback = st.sidebar.text_input("Fallback Virtual Key Slug", value="vk2", help="Virtual key configured in Portkey for a smaller model (e.g. llama-3.1-8b-instant)")
+vk_primary = st.sidebar.text_input("Primary Virtual Key Slug", value="vk1", help="Virtual key configured in Portkey for Groq")
+primary_model = st.sidebar.selectbox("Primary Model", ["llama-3.3-70b-versatile", "llama-3.1-8b-instant", "mixtral-8x7b-32768", "gemma2-9b-it"], index=0)
+
+vk_fallback = st.sidebar.text_input("Fallback Virtual Key Slug", value="vk2", help="Virtual key configured in Portkey for a fallback model")
+fallback_model = st.sidebar.selectbox("Fallback Model", ["llama-3.3-70b-versatile", "llama-3.1-8b-instant", "mixtral-8x7b-32768", "gemma2-9b-it"], index=1)
 
 st.sidebar.markdown("---")
 
@@ -38,8 +41,8 @@ experiment = st.sidebar.radio(
     )
 )
 
-GROQ_MODEL = f"@{vk_primary}/llama-3.3-70b-versatile"
-GROQ_MODEL_SMALL = f"@{vk_fallback}/llama-3.1-8b-instant"
+GROQ_MODEL = f"@{vk_primary}/{primary_model}"
+GROQ_MODEL_SMALL = f"@{vk_fallback}/{fallback_model}"
 
 def init_portkey(config=None):
     if not portkey_api_key:
@@ -79,9 +82,9 @@ if experiment == "Baseline (No Gateway)":
 
 elif experiment == "Exp 1: Basic Gateway Call":
     st.markdown("**Goal:** Same call, same answer — but now every request is logged in your Portkey dashboard.")
-    st.code('''portkey.chat.completions.create(
-    model="@vk1/llama-3.3-70b-versatile",
-    messages=[{"role":"user","content":q}]
+    st.code(f'''portkey.chat.completions.create(
+    model="@{vk_primary}/{primary_model}",
+    messages=[{{"role":"user","content":q}}]
 )''', language="python")
     
     q = st.text_input("Ask a question", "What is AI and gen ai?")
@@ -218,9 +221,9 @@ elif experiment == "Exp 5: Fallbacks":
             {
                 "provider": "groq",
                 "api_key": "gsk_FAKE_INVALID_KEY_THIS_WILL_FAIL",   # bad key
-                "override_params": {"model": "llama-3.3-70b-versatile"}
+                "override_params": {"model": primary_model}
             },
-            {"override_params": {"model": GROQ_MODEL_SMALL}}         # fallback
+            {"override_params": {"model": fallback_model}}         # fallback
         ]
     }
     st.json(forced_fallback_config)
