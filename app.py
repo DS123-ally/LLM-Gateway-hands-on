@@ -133,6 +133,7 @@ with st.sidebar:
         ("Streaming", "streaming"),
         ("Guardrails (Portkey)", "guardrails"),
         ("NeMo Guardrails (Local)", "nemo"),
+        ("LiteLLM Guardrails (Proxy)", "litellm_guardrails"),
         ("Production Config", "production"),
     ]
     _LABELS = [p[0] for p in _PAGES]
@@ -164,6 +165,7 @@ from modules.demos import (
     d11_production,
     d12_guardrails,
     d13_nemo,
+    d14_litellm_guardrails,
 )
 
 _PAGE_MAP = {
@@ -181,6 +183,7 @@ _PAGE_MAP = {
     "streaming":       d10_streaming.render,
     "guardrails":      d12_guardrails.render,
     "nemo":            d13_nemo.render,
+    "litellm_guardrails": d14_litellm_guardrails.render,
     "production":      d11_production.render,
 }
 
