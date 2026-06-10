@@ -37,9 +37,7 @@ def render():
                 }
                 payload = {
                     "model": "groq-model",
-                    "messages": [{"role": "user", "content": prompt}],
-                    # Request the Prompt Injection guardrail to be run!
-                    "guardrails": ["my_injection_check"]
+                    "messages": [{"role": "user", "content": prompt}]
                 }
                 
                 # Check if proxy is running

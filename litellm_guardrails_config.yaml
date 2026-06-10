@@ -4,7 +4,5 @@ model_list:
       model: "groq/llama-3.3-70b-versatile"
       api_key: "os.environ/GROQ_API_KEY"
 
-# In LiteLLM v1.88, guardrails are defined at the root as a list
-guardrails:
-  - guardrail_name: "my_injection_check"
-    callbacks: ["my_custom_guardrail.py"]
+litellm_settings:
+  callbacks: ["my_custom_guardrail.py"]
