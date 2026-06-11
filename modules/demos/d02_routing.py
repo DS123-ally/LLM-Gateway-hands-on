@@ -50,7 +50,7 @@ print(response.choices[0].message.content)
 
     @st.cache_resource
     def get_router():
-        from semantic_router import Route, RouteLayer
+        from semantic_router import Route, SemanticRouter
         from semantic_router.encoders import FastEmbedEncoder
         encoder = FastEmbedEncoder()
         casual = Route(
@@ -61,7 +61,7 @@ print(response.choices[0].message.content)
             name="complex_task",
             utterances=["solve this math equation", "write a python script", "explain quantum physics", "analyze this data", "how does a database work"]
         )
-        return RouteLayer(encoder=encoder, routes=[casual, complex_task])
+        return SemanticRouter(encoder=encoder, routes=[casual, complex_task])
 
     # Semantic intent classification for conditional routing
     router = get_router()
