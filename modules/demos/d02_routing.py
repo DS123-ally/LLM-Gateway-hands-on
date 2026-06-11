@@ -61,7 +61,7 @@ print(response.choices[0].message.content)
             name="complex_task",
             utterances=["solve this math equation", "write a python script", "explain quantum physics", "analyze this data", "how does a database work"]
         )
-        return SemanticRouter(encoder=encoder, routes=[casual, complex_task])
+        return SemanticRouter(encoder=encoder, routes=[casual, complex_task], auto_sync="local")
 
     # Semantic intent classification for conditional routing
     router = get_router()
