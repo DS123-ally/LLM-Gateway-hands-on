@@ -48,10 +48,27 @@ print(response.choices[0].message.content)
 
     question = question_selector("routing", INTERESTING_QUESTIONS)
 
-    # Simple intent classification for conditional routing
-    is_complex = any(keyword in question.lower() for keyword in ["solve", "explain", "why", "code", "analyze"])
-    routed_model = PRIMARY_MODEL if is_complex else "gemma2-9b-it"
+    @st.cache_resource
+    def get_router():
+        from semantic_router import Route, RouteLayer
+        from semantic_router.encoders import FastEmbedEncoder
+        encoder = FastEmbedEncoder()
+        casual = Route(
+            name="casual_chat",
+            utterances=["hello", "how are you", "tell me a joke", "good morning", "what's up", "hi there"]
+        )
+        complex_task = Route(
+            name="complex_task",
+            utterances=["solve this math equation", "write a python script", "explain quantum physics", "analyze this data", "how does a database work"]
+        )
+        return RouteLayer(encoder=encoder, routes=[casual, complex_task])
 
+    # Semantic intent classification for conditional routing
+    router = get_router()
+    route_choice = router(question).name
+    
+    is_complex = route_choice != "casual_chat"
+    routed_model = PRIMARY_MODEL if is_complex else "gemma2-9b-it"
     if st.button("Run Through Gateway", type="primary", width="stretch"):
         with st.spinner(f"Routing to {routed_model}..."):
             try:
@@ -85,9 +102,10 @@ print(response.choices[0].message.content)
         st.caption(f"Model actually used: {r['model']}")
 
         st.divider()
-        st.subheader("Conditional Routing in Action")
+        st.subheader("Semantic Routing in Action")
         st.write(
-            f"Based on the complexity of your prompt, the Gateway dynamically routed the request to `{r['routed_model']}`. "
-            "Simple queries like 'Hello' go to faster/cheaper models, while complex tasks like 'Solve this math problem' go to the larger model!"
+            f"Instead of basic keyword matching, the Gateway used **Semantic Router** with vector embeddings! "
+            f"It mathematically compared your prompt to known intents and triggered the `{route_choice or 'default'}` route, "
+            f"dynamically sending your request to `{r['routed_model']}`."
         )
         st.success("Check portkey.ai > Logs to see this request appear.")
