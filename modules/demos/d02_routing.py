@@ -48,11 +48,15 @@ print(response.choices[0].message.content)
 
     question = question_selector("routing", INTERESTING_QUESTIONS)
 
+    # Simple intent classification for conditional routing
+    is_complex = any(keyword in question.lower() for keyword in ["solve", "explain", "why", "code", "analyze"])
+    routed_model = PRIMARY_MODEL if is_complex else "gemma2-9b-it"
+
     if st.button("Run Through Gateway", type="primary", width="stretch"):
-        with st.spinner("Routing through Portkey..."):
+        with st.spinner(f"Routing to {routed_model}..."):
             try:
                 client = make_client()
-                response, elapsed = timed_call(client, build_messages(question))
+                response, elapsed = timed_call(client, build_messages(question), model=routed_model)
                 text = extract_text(response)
                 model = get_model_used(response)
                 st.session_state.routing_result = {
@@ -60,6 +64,8 @@ print(response.choices[0].message.content)
                     "latency": elapsed,
                     "model": model,
                     "tokens": getattr(getattr(response, "usage", None), "total_tokens", "—"),
+                    "routed_model": routed_model,
+                    "is_complex": is_complex
                 }
             except Exception as e:
                 st.error(f"Error: {e}")
@@ -73,20 +79,15 @@ print(response.choices[0].message.content)
         col1, col2, col3 = st.columns(3)
         col1.metric("Latency", f"{r['latency']} ms")
         col2.metric("Total Tokens", r["tokens"])
-        col3.metric("Gateway", "Portkey", delta="logged")
+        col3.metric("Complexity", "Complex" if r["is_complex"] else "Simple", delta="Routed to " + r["routed_model"].split("-")[0])
 
         st.write(r["text"])
-        st.caption(f"Model: {r['model']}")
+        st.caption(f"Model actually used: {r['model']}")
 
         st.divider()
-        st.subheader("What just happened in your dashboard")
+        st.subheader("Conditional Routing in Action")
         st.write(
-            "Open your Portkey dashboard and you'll see this request logged with:\n\n"
-            "- Full prompt and response text\n"
-            "- Token counts and estimated cost\n"
-            "- Latency in milliseconds\n"
-            "- The model used\n"
-            "- Timestamp and request ID\n\n"
-            "No code changes needed to get all of this."
+            f"Based on the complexity of your prompt, the Gateway dynamically routed the request to `{r['routed_model']}`. "
+            "Simple queries like 'Hello' go to faster/cheaper models, while complex tasks like 'Solve this math problem' go to the larger model!"
         )
         st.success("Check portkey.ai > Logs to see this request appear.")
