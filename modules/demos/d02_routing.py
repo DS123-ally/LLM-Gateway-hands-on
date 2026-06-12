@@ -55,11 +55,11 @@ print(response.choices[0].message.content)
         encoder = FastEmbedEncoder()
         casual = Route(
             name="casual_chat",
-            utterances=["hello", "how are you", "tell me a joke", "good morning", "what's up", "hi there"]
+            utterances=["hello", "how are you", "tell me a joke", "good morning", "what's up", "hi there",]
         )
         complex_task = Route(
             name="complex_task",
-            utterances=["solve this math equation", "write a python script", "explain quantum physics", "analyze this data", "how does a database work"]
+            utterances=["solve this math equation", "write a python script", "explain quantum physics", "analyze this data", "how does a database work","Agentic AI realted things","Cloud and Devops","LLM Security"]
         )
         return SemanticRouter(encoder=encoder, routes=[casual, complex_task], auto_sync="local")
 

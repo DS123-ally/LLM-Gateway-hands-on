@@ -73,7 +73,7 @@ def render():
     with col1:
         retry_attempts = st.slider("Retry attempts on 429/500", 1, 4, 2)
     with col2:
-        num_requests = st.slider("Number of rapid-fire requests", 3, 8, 5)
+        num_requests = st.slider("Number of rapid-fire requests", 3, 30, 15)
 
     resilience_config = {
         "strategy": {"mode": "fallback"},
