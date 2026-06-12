@@ -11,14 +11,14 @@ from modules.questions import RAPID_FIRE_QUESTIONS
 
 
 def _fire_request(args):
-    client, question, idx, delay, model = args
+    client, question, idx, delay, model, target_max_tokens = args
     time.sleep(delay)
     start = time.time()
     try:
         response = client.chat.completions.create(
             model=model,
             messages=[{"role": "user", "content": question}],
-            max_tokens=60,
+            max_tokens=target_max_tokens,
         )
         elapsed = int((time.time() - start) * 1000)
         return {
@@ -116,9 +116,12 @@ def render():
     for i, q in enumerate(questions_to_use):
         st.text(f"Request {i + 1}: {q}")
 
+    simulate_heavy_load = st.toggle("Simulate heavy load (Request 2000 tokens per prompt to trigger 429s)", value=True)
+    target_max_tokens = 2000 if simulate_heavy_load else 60
+
     if st.button(f"Fire {num_requests} Requests Now", type="primary", width="stretch"):
         client = make_client(config=resilience_config)
-        args_list = [(client, q, i, 0, PRIMARY_MODEL) for i, q in enumerate(questions_to_use)]
+        args_list = [(client, q, i, 0, PRIMARY_MODEL, target_max_tokens) for i, q in enumerate(questions_to_use)]
 
         progress = st.progress(0, text="Firing all requests...")
         results = []
