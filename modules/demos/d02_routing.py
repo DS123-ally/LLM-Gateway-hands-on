@@ -68,7 +68,7 @@ print(response.choices[0].message.content)
     route_choice = router(question).name
     
     is_complex = route_choice != "casual_chat"
-    routed_model = PRIMARY_MODEL if is_complex else "gemma2-9b-it"
+    routed_model = PRIMARY_MODEL if is_complex else "llama-3.1-8b-instant"
     if st.button("Run Through Gateway", type="primary", width="stretch"):
         with st.spinner(f"Routing to {routed_model}..."):
             try:

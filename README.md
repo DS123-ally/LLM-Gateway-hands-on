@@ -10,7 +10,7 @@ The application uses a unified API standard (OpenAI format). This means you can 
 ### 2. Semantic Routing (`d02_routing.py`)
 Instead of relying on fragile keyword matching, the application uses **Semantic Router** with `FastEmbed` mathematical vector embeddings. 
 - It instantly converts user prompts into high-dimensional vectors.
-- It calculates semantic similarity to route "Casual Chats" to the lightweight and lightning-fast `gemma2-9b-it` model.
+- It calculates semantic similarity to route "Casual Chats" to the lightweight and lightning-fast `llama-3.1-8b-instant` model.
 - It routes "Complex Tasks" (coding, math, reasoning) to the massive `llama-3.3-70b-versatile` model to ensure high quality while saving costs.
 
 ### 3. Cross-Architecture Fallbacks (`d06_fallbacks.py`)
